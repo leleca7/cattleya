@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
+import { SiteChrome } from "@/components/site-chrome";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getSiteSettings } from "@/lib/data";
@@ -34,9 +35,12 @@ export default async function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${display.variable} ${sans.variable}`}>
-        <SiteHeader settings={settings} />
-        <main>{children}</main>
-        <SiteFooter settings={settings} />
+        <SiteChrome
+          header={<SiteHeader settings={settings} />}
+          footer={<SiteFooter settings={settings} />}
+        >
+          {children}
+        </SiteChrome>
       </body>
     </html>
   );

@@ -137,3 +137,39 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     },
   };
 }
+
+
+export type SiteContentRow = {
+  id: number;
+  section_key: string;
+  title: string | null;
+  body: string | null;
+  data: any;
+  active: boolean;
+};
+
+export async function getSiteContentMap() {
+  const rows = (await sql`
+    SELECT id, section_key, title, body, data, active
+    FROM site_content
+    WHERE active = TRUE
+    ORDER BY id ASC
+  `) as SiteContentRow[];
+
+  return Object.fromEntries(rows.map((row) => [row.section_key, row])) as Record<string, SiteContentRow>;
+}
+
+export async function getCommerceSettings() {
+  const rows = (await sql`
+    SELECT key, value
+    FROM site_settings
+    WHERE key IN ('payment','delivery')
+  `) as Array<{ key: string; value: any }>;
+
+  const map = Object.fromEntries(rows.map((row) => [row.key, row.value]));
+
+  return {
+    payment: map.payment ?? {},
+    delivery: map.delivery ?? {},
+  };
+}

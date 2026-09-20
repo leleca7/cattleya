@@ -6,10 +6,12 @@ import {
   History,
   Home,
   Link2,
+  LogOut,
   Settings,
   Tags,
   Users,
 } from "lucide-react";
+import { logoutAction } from "@/app/admin/logout/actions";
 
 const items = [
   { href: "/admin", label: "Início", icon: Home },
@@ -40,7 +42,12 @@ export function AdminSidebar({ email }: { email: string }) {
         ))}
       </nav>
 
-      <div className="admin-sidebar-footer">{email}</div>
+      <div className="admin-sidebar-footer">
+        <div>{email}</div>
+        <form action={logoutAction}>
+          <button className="admin-logout" type="submit"><LogOut size={15} /> Sair</button>
+        </form>
+      </div>
     </aside>
   );
 }

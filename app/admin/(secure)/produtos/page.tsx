@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { Save } from "lucide-react";
+import Link from "next/link";
+import { Plus, Save } from "lucide-react";
 import { getAdminProducts } from "@/lib/admin-data";
 import { updateProductQuick } from "./actions";
 
@@ -10,18 +11,17 @@ export default async function AdminProductsPage() {
     <>
       <div className="admin-heading">
         <div><p className="eyebrow">Catálogo</p><h1>Produtos</h1></div>
-        <span className="admin-muted">{products.length} registros únicos</span>
+        <Link href="/admin/produtos/novo" className="button button-primary"><Plus size={17} /> Novo produto</Link>
       </div>
 
-      <div className="admin-table-wrap">
+      <p className="admin-muted">{products.length} registros únicos</p>
+
+      <div className="admin-table-wrap admin-section">
         <table className="admin-table">
           <thead>
             <tr>
               <th>Produto</th>
-              <th>Status</th>
-              <th>Preço</th>
-              <th>Disponibilidade</th>
-              <th></th>
+              <th colSpan={4}>Edição rápida</th>
             </tr>
           </thead>
           <tbody>
@@ -29,11 +29,11 @@ export default async function AdminProductsPage() {
               <tr key={product.id}>
                 <td>
                   <div className="admin-product">
-                    <div className="admin-product-thumb">
+                    <Link href={`/admin/produtos/${product.id}`} className="admin-product-thumb">
                       {product.image_url && <Image src={product.image_url} alt={product.name} fill sizes="45px" />}
-                    </div>
+                    </Link>
                     <div>
-                      <strong>{product.name}</strong>
+                      <Link href={`/admin/produtos/${product.id}`}><strong>{product.name}</strong></Link>
                       <div className="admin-muted">{product.code ?? "Sem código"} · {product.category ?? "Sem categoria"}</div>
                     </div>
                   </div>

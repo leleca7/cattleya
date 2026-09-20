@@ -12,9 +12,9 @@ export function SiteChrome({
   footer: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const isAdmin = pathname.startsWith("/admin");
+  const standalone = pathname.startsWith("/admin") || pathname === "/bio";
 
-  if (isAdmin) return <>{children}</>;
+  if (standalone) return <>{children}</>;
 
   return (
     <>

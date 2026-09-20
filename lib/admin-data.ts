@@ -99,3 +99,34 @@ export async function getAdminSizes() {
     ORDER BY sort_order ASC, name ASC
   `;
 }
+
+
+export async function getAdminProduct(id: number) {
+  const rows = await sql`
+    SELECT p.*, c.name AS category_name
+    FROM products p
+    LEFT JOIN categories c ON c.id = p.category_id
+    WHERE p.id = ${id}
+    LIMIT 1
+  `;
+  return rows[0] ?? null;
+}
+
+export async function getAdminProductImages(id: number) {
+  return await sql`
+    SELECT id, url, alt_text, sort_order, is_primary
+    FROM product_images
+    WHERE product_id = ${id}
+    ORDER BY is_primary DESC, sort_order ASC, id ASC
+  `;
+}
+
+export async function getAdminProductColorIds(id: number) {
+  const rows = await sql`SELECT color_id FROM product_colors WHERE product_id=${id}`;
+  return rows.map((row: any) => Number(row.color_id));
+}
+
+export async function getAdminProductSizeIds(id: number) {
+  const rows = await sql`SELECT size_id FROM product_sizes WHERE product_id=${id}`;
+  return rows.map((row: any) => Number(row.size_id));
+}

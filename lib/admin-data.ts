@@ -82,3 +82,20 @@ export async function getBioLinks() {
     ORDER BY sort_order ASC, id ASC
   `;
 }
+
+
+export async function getAdminColors() {
+  return await sql`
+    SELECT id, name, slug, sort_order, active
+    FROM colors
+    ORDER BY sort_order ASC, name ASC
+  `;
+}
+
+export async function getAdminSizes() {
+  return await sql`
+    SELECT id, name, slug, sort_order, active
+    FROM sizes
+    ORDER BY sort_order ASC, name ASC
+  `;
+}

@@ -1,13 +1,23 @@
 import Link from "next/link";
 import { ArrowRight, Clock3, HeartHandshake, Sparkles } from "lucide-react";
 import { ProductCard } from "@/components/product-card";
-import { getPublishedProducts, getSiteSettings } from "@/lib/data";
+import { getPublishedProducts, getSiteContentMap, getSiteSettings } from "@/lib/data";
 
 export default async function HomePage() {
-  const [products, settings] = await Promise.all([
+  const [products, settings, content] = await Promise.all([
     getPublishedProducts(),
     getSiteSettings(),
+    getSiteContentMap(),
   ]);
+
+  const hero = content.hero ?? {};
+  const about = content.about ?? {};
+  const steps = content.how_to_buy?.data?.steps ?? [
+    "Escolha o modelo, a cor e a numeração desejados.",
+    "Adicione os produtos à sua lista de interesse ou envie diretamente pelo WhatsApp.",
+    "Aguarde a confirmação da disponibilidade, do valor e do prazo do pedido.",
+    "Combine a forma de pagamento, a retirada ou a entrega com a nossa equipe.",
+  ];
 
   const featured = products.filter((item) => item.featured).slice(0, 3);
   const highlights = featured.length >= 3 ? featured : products.slice(0, 3);
@@ -20,11 +30,11 @@ export default async function HomePage() {
         <div className="container hero-grid">
           <div className="hero-copy">
             <p className="eyebrow">{settings.brand.category}</p>
-            <h1>{settings.brand.highlight_phrase}.</h1>
+            <h1>{hero.title ?? settings.brand.highlight_phrase}</h1>
             <p className="hero-text">
-              Descubra bolsas e calçados selecionados para acompanhar o seu estilo.
-              Consulte cores, numerações, disponibilidade e prazo antes de finalizar seu pedido.
+              {hero.body ?? "Descubra bolsas e calçados selecionados para acompanhar o seu estilo. Consulte cores, numerações, disponibilidade e prazo antes de finalizar seu pedido."}
             </p>
+            {hero.data?.notice && <p className="hero-notice">{hero.data.notice}</p>}
             <div className="hero-actions">
               <Link href="/catalogo" className="button button-primary">
                 Ver catálogo <ArrowRight size={17} />
@@ -80,12 +90,7 @@ export default async function HomePage() {
           <Link href="/como-comprar">Ver passo a passo <ArrowRight size={15} /></Link>
         </div>
         <div className="steps-grid">
-          {[
-            "Escolha o modelo, a cor e a numeração desejados.",
-            "Adicione os produtos à sua lista de interesse ou envie diretamente pelo WhatsApp.",
-            "Aguarde a confirmação da disponibilidade, do valor e do prazo do pedido.",
-            "Combine a forma de pagamento, a retirada ou a entrega com a nossa equipe.",
-          ].map((step, index) => (
+          {steps.slice(0, 4).map((step: string, index: number) => (
             <div className="step-card" key={step}>
               <span>{index + 1}</span>
               <p>{step}</p>
@@ -104,11 +109,9 @@ export default async function HomePage() {
 
       <section className="section container about-strip">
         <p className="eyebrow">Encomendas</p>
-        <h2>Feito para destacar você.</h2>
+        <h2>{about.title ?? "Feito para destacar você."}</h2>
         <p>
-          Na Cattleya, cada peça é escolhida com carinho para unir estilo, variedade e praticidade.
-          Trabalhamos com bolsas e calçados sob encomenda, oferecendo atendimento próximo para ajudar
-          você a encontrar o modelo, a cor e a numeração ideais.
+          {about.body ?? "Na Cattleya, cada peça é escolhida com carinho para unir estilo, variedade e praticidade. Trabalhamos com bolsas e calçados sob encomenda, oferecendo atendimento próximo para ajudar você a encontrar o modelo, a cor e a numeração ideais."}
         </p>
       </section>
     </>
